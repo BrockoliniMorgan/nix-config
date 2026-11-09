@@ -6,6 +6,5 @@
   boot.blacklistedKernelModules = [
     "btusb" # Bluetooth USB devices
     "mousedev" # Older programs that require PS/2 connections instead of USB mice and keyboards
-    "atkbd" # AT and PS/2 keyboard driver
   ];
 }
