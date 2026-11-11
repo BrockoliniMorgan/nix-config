@@ -74,14 +74,5 @@ in
       env.NIX_CFLAGS_COMPILE = (env.NIX_CFLAGS_COMPILE or "") + " -Os -flto";
     }
   );
-  rsync = prev.pkgsStatic.rsync.overrideAttrs (
-    {
-      env ? { },
-      ...
-    }:
-    {
-      env.NIX_CFLAGS_COMPILE = (env.NIX_CFLAGS_COMPILE or "") + " -Os -flto";
-    }
-  );
   bat = prev.pkgsStatic.bat;
 }
