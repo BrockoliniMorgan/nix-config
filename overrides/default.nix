@@ -44,7 +44,6 @@ in
   mako = prev.mako.override {
     withFishCompletions = false;
     withZshCompletions = false;
-    systemdMinimal = final.systemdLibs;
   };
   systemd = prev.systemd.override { withBootloader = false; };
   ly = prev.ly.override {

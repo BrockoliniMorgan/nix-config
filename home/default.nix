@@ -8,7 +8,7 @@
     ./home.nix
     ./packages.nix
     ./tmux.nix
-    inputs.nvf.homeManagerModules.nvf
+    inputs.nvf.homeModules.nvf
   ];
   programs.nvf = {
     defaultEditor = true;

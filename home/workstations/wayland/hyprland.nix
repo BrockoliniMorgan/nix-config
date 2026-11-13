@@ -67,7 +67,7 @@
           {
             _args = [
               (lua "mod .. \" + S\"")
-              (lua "hl.dsp.exec_cmd(\"${lib.getExe pkgs.qutebrowser}\")")
+              (lua "hl.dsp.exec_cmd(\"${lib.getExe pkgs.brave-origin}\")")
             ];
           }
           {
