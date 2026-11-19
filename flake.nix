@@ -44,7 +44,9 @@
       inherit (nixpkgs) lib;
       overlays = [
         sops-nix.overlays.default
-        (import ./overrides)
+        (import ./overrides {
+          inherit lib inputs;
+        })
       ];
       allowUnfreePackages = [
         "steam"
