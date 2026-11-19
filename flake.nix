@@ -38,6 +38,7 @@
       disko,
       treefmt-nix,
       sops-nix,
+      self,
       ...
     }@inputs:
     let
@@ -123,6 +124,12 @@
         projectRootFile = "flake.nix";
         programs.nixfmt.enable = true;
       };
+
+      allSystems = (pkgs-per-system "x86_64-linux").linkFarm "all-systems" (
+        lib.attrsets.concatMapAttrs (name: value: {
+          ${name} = value.config.system.build.toplevel;
+        }) self.nixosConfigurations
+      );
     in
     {
       nixosConfigurations =
@@ -130,6 +137,10 @@
         concatMapAttrs createWorkstation workstations // concatMapAttrs createServer servers;
 
       formatter.x86_64-linux = treefmtEval.config.build.wrapper;
+      packages.x86_64-linux = {
+        default = allSystems;
+        inherit allSystems;
+      };
     };
   nixConfig = {
     extra-substituters = [ "https://cache.brockjmorgan.dev" ];
