@@ -1,4 +1,4 @@
-{ pkgs, userName, ... }:
+{ userName, ... }:
 {
   programs.btop.settings = {
     color_theme = "onedark";
@@ -27,8 +27,8 @@
   home = {
     shell.enableShellIntegration = true;
     shellAliases = {
-      nrsf = "sudo nixos-rebuild switch --flake ~/nix-config";
-      ngc = "sudo nix-collect-garbage -d && nix-collect-garbage -d";
+      nrsf = "sudo nixos-rebuild switch --flake ~/nix-config --accept-flake-config";
+      ngc = "sudo nix-collect-garbage -d";
     };
     username = userName;
     homeDirectory = "/home/${userName}";
