@@ -1,5 +1,7 @@
 {
-  disko.devices.disk.main.content.partitions = {
+  disko.devices.disk.main = {
+  device = "/dev/disk/by-id/nvme-KBG6AZNV1T02_LA_KIOXIA_6F5PS38DZ2B9";
+  content.partitions = {
     luks.size = "500G";
     arch-boot = {
       name = "ARCHBOOT";
@@ -38,6 +40,7 @@
         type = "filesystem";
         format = "ext4";
       };
+};
     };
   };
 }

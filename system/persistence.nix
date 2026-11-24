@@ -1,20 +1,18 @@
 { userName, ... }:
 {
   boot.initrd.systemd.services.impermanence-btrfs = {
-    wantedBy = [ "initrd.target" ];
-    requires = [ "systemd-cryptsetup@cryptroot.service" ];
+    after = [ "systemd-cryptsetup@cryptroot.service" ];
+    before = [ "sysroot.mount" ];
     requiredBy = [ "sysroot.mount" ];
-    unitConfig.DefaulDependencies = "no";
-    serviceConfig.type = "oneshot";
+    unitConfig.DefaultDependencies = "no";
+    serviceConfig.Type = "oneshot";
     script = ''
       mkdir -p /btrfs_tmp
       mount /dev/mapper/cryptroot /btrfs_tmp
-      if [[ -e /btrfs_tmp/root ]]; then
-        mkdir -p /btrfs_tmp/old_roots
-        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-        mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-      fi
+      echo "Btrfs root mounted"
+
       delete_subvolume_recursively() {
+        echo "Deleting subvolume $i"
         IFS=$'\n'
         for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
           delete_subvolume_recursively "/btrfs_tmp/$i"
@@ -22,13 +20,26 @@
         btrfs subvolume delete "$1"
       }
 
+      echo "Deleting old subvolumes"
       for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +7); do
         delete_subvolume_recursively "$i"
       done
 
+      if [[ -d /btrfs_tmp/root ]]; then
+        echo "Root exists"
+        mkdir -p /btrfs_tmp/old_roots
+        timestamp=$(date "+%Y-%m-%-d_%H:%M:%S")
+        echo "Creating root for timestamp: $timestamp"
+        mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+      fi
+      echo "Creating next root"
       btrfs subvolume create /btrfs_tmp/root
+
+      echo "Unmounting"
       umount /btrfs_tmp
+      echo "Deleting mountpoint"
       rm -rf /btrfs_tmp
+      echo "Finished"
     '';
   };
 
